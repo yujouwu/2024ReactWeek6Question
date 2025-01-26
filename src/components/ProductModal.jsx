@@ -1,11 +1,10 @@
 // 外部 node_modules 資源
 import PropTypes from 'prop-types';
-import { useEffect, useRef } from 'react';
 
 function ProductModal({
   modalType,
   modalData,
-  oncloseModal,
+  onCloseModal,
   onModalImageFileChange,
   onModalInputChange,
   onMoreImageInputChange,
@@ -47,7 +46,7 @@ function ProductModal({
               className="btn-close"
               data-bs-dismiss="modal"
               aria-label="Close"
-              onClick={() => closeModal()}
+              onClick={() => onCloseModal()}
             ></button>
           </div>
           <div className="modal-body">
@@ -336,7 +335,7 @@ function ProductModal({
               type="button"
               className="btn btn-secondary"
               data-bs-dismiss="modal"
-              onClick={() => closeModal()}
+              onClick={() => onCloseModal()}
             >
               取消
             </button>
@@ -399,7 +398,7 @@ ProductModal.propTypes = {
     "title(en)": PropTypes.string,
     unit: PropTypes.string,
   }).isRequired,
-  oncloseModal: PropTypes.func.isRequired,
+  onCloseModal: PropTypes.func.isRequired,
   onModalImageFileChange: PropTypes.func.isRequired,
   onModalInputChange: PropTypes.func.isRequired,
   onMoreImageInputChange: PropTypes.func.isRequired,

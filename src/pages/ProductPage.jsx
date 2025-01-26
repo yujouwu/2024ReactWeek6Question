@@ -382,7 +382,7 @@ function ProductPage(){
       <ProductModal 
         modalType={modalType}
         modalData={modalData}
-        oncloseModal={closeModal}
+        onCloseModal={closeModal}
         onModalImageFileChange={handleModalImageFileChange}
         onModalInputChange={handleModalInputChange}
         onMoreImageInputChange={handleMoreImageInputChange}
