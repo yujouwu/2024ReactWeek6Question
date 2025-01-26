@@ -56,15 +56,23 @@ function ProductPage(){
     "title(en)": "",
     unit: "",
   };
+  const imageFileInputRefs = useRef({});
   const productModalRef = useRef(null);
   const [modalType, setModalType] = useState("");
   const [modalData, setModalData] = useState(defaultModalData);
+
+  const clearImageFileInputValue = () => {
+    Object.values(imageFileInputRefs.current).forEach((input) => {
+      if (input) input.value = "";  // 清空檔案輸入框
+    })
+  }
 
   const openModal = (product, type) => {
     setModalType(type);
     setModalData(product);
 
     productModalRef.current.show();
+    clearImageFileInputValue();
   };
 
   const closeModal = () => {
@@ -102,6 +110,7 @@ function ProductPage(){
       ...prevData,
       imagesUrl: newImages,
     }));
+    imageFileInputRefs.current[`moreImages-${index + 1}`].value = "";
   };
 
   const handleModalImageAdd = () => {
@@ -113,31 +122,50 @@ function ProductPage(){
     }));
   };
 
-  const handleModalImageRemove = () => {
-    const newImages = [...modalData.imagesUrl];
-    newImages.pop();
-    setModalData((prevData) => ({
-      ...prevData,
-      imagesUrl: newImages,
-    }));
+  const handleModalImageRemove = (imageType, index) => {
+    if(imageType === "mainImage"){
+      setModalData((prevData) => ({
+        ...prevData,
+        imageUrl: "",
+      }));
+      imageFileInputRefs.current.mainImage.value = "";
+    }else{
+      const newImages = [...modalData.imagesUrl];
+      // newImages.pop();
+      newImages.splice(index, 1)
+      setModalData((prevData) => ({
+        ...prevData,
+        imagesUrl: newImages,
+      }));
+    }
   };
 
-  const handleModalImageFileChange = async (e) => {
+  const handleModalImageFileChange = async (e, index) => {
     const file = e.target.files[0];
     const formData = new FormData();
     formData.append('file-to-upload', file);
     try {
       const response = await axios.post(`${BASE_URL}/api/${API_PATH}/admin/upload`, formData);
       const uploadedImageUrl = response.data.imageUrl;
-      setModalData({
-        ...modalData,
-        imageUrl: uploadedImageUrl
-      })
+      if(e.target.name === "imageUrl"){
+        setModalData({
+          ...modalData,
+          imageUrl: uploadedImageUrl
+        })
+      }else if(e.target.name === "imagesUrl"){
+        const newImages = [...modalData.imagesUrl];
+        newImages[index] = uploadedImageUrl;
+        setModalData((prevData) => ({
+          ...prevData,
+          imagesUrl: newImages,
+        }));
+      }
     } catch (error) {
       console.dir(error);
       alert(error.response.data.message)
     }
   }
+  
   // 產品 API 相關
   // const [tempProduct, setTempProduct] = useState({});
   // const [mainImage, setMainImage] = useState(null);
@@ -354,14 +382,15 @@ function ProductPage(){
       <ProductModal 
         modalType={modalType}
         modalData={modalData}
-        closeModal={closeModal}
-        handleModalImageFileChange={handleModalImageFileChange}
-        handleModalInputChange={handleModalInputChange}
-        handleMoreImageInputChange={handleMoreImageInputChange}
-        handleModalImageAdd={handleModalImageAdd}
-        handleModalImageRemove={handleModalImageRemove}
-        handleModalNutritionalsChange={handleModalNutritionalsChange}
-        handleProductModalAction={handleProductModalAction}
+        oncloseModal={closeModal}
+        onModalImageFileChange={handleModalImageFileChange}
+        onModalInputChange={handleModalInputChange}
+        onMoreImageInputChange={handleMoreImageInputChange}
+        onModalImageAdd={handleModalImageAdd}
+        onModalImageRemove={handleModalImageRemove}
+        onModalNutritionalsChange={handleModalNutritionalsChange}
+        onProductModalAction={handleProductModalAction}
+        imageFileInputRefs={imageFileInputRefs}
       />
     </>
   )

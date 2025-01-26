@@ -8,7 +8,7 @@ import ProductPage from "./pages/ProductPage";
 
 function App() {
   // 登入相關
-  const [isAuth, setIsAuth] = useState(false);
+  const [isAuth, setIsAuth] = useState(true);
 
   return (
     <>

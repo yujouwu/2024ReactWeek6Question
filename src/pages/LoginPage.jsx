@@ -4,7 +4,8 @@ import axios from "axios";
 import PropTypes from 'prop-types';
 
 // 內部 src 資源
-import "../assets/all.scss"
+import "../assets/all.scss";
+import Footer from "../components/Footer";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -42,43 +43,45 @@ function LoginPage({setIsAuth}){
   };
 
   return (
-    <div className="d-flex flex-column justify-content-center align-items-center vh-100">
-      <h1 className="mb-5">
-        請先登入 <i className="bi bi-box-arrow-in-left"></i>
-      </h1>
-      <form onSubmit={adminSignIn} className="d-flex flex-column gap-3">
-        <div className="form-floating mb-3">
-          <input
-            name="username"
-            value={account.username}
-            onChange={handleAdminSignInInputChange}
-            type="email"
-            className="form-control"
-            id="username"
-            placeholder="name@example.com"
-          />
-          <label htmlFor="username">Email address</label>
-        </div>
-        <div className="form-floating">
-          <input
-            name="password"
-            value={account.password}
-            onChange={handleAdminSignInInputChange}
-            type="password"
-            className="form-control"
-            id="password"
-            placeholder="Password"
-          />
-          <label htmlFor="password">Password</label>
-        </div>
-        <button type="submit" className="btn btn-primary">
-          登入
-        </button>
-      </form>
-      <p className="mt-5 mb-3 text-secondary">
-        &copy; 2024 - Regis's Cakes
-      </p>
+    <>
+    <div className="vh-100 d-flex flex-column justify-content-center">
+      <div className="d-flex flex-column align-items-center mt-auto">
+        <h1 className="mb-5">
+          請先登入 <i className="bi bi-box-arrow-in-left"></i>
+        </h1>
+        <form onSubmit={adminSignIn} className="d-flex flex-column gap-3">
+          <div className="form-floating mb-3">
+            <input
+              name="username"
+              value={account.username}
+              onChange={handleAdminSignInInputChange}
+              type="email"
+              className="form-control"
+              id="username"
+              placeholder="name@example.com"
+            />
+            <label htmlFor="username">Email address</label>
+          </div>
+          <div className="form-floating">
+            <input
+              name="password"
+              value={account.password}
+              onChange={handleAdminSignInInputChange}
+              type="password"
+              className="form-control"
+              id="password"
+              placeholder="Password"
+            />
+            <label htmlFor="password">Password</label>
+          </div>
+          <button type="submit" className="btn btn-primary">
+            登入
+          </button>
+        </form>
+      </div>
+      <Footer />
     </div>
+    </>
   )
 }
 LoginPage.propTypes = {

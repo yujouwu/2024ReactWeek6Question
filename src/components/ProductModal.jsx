@@ -5,14 +5,15 @@ import { useEffect, useRef } from 'react';
 function ProductModal({
   modalType,
   modalData,
-  closeModal,
-  handleModalImageFileChange,
-  handleModalInputChange,
-  handleMoreImageInputChange,
-  handleModalImageAdd,
-  handleModalImageRemove,
-  handleModalNutritionalsChange,
-  handleProductModalAction,
+  oncloseModal,
+  onModalImageFileChange,
+  onModalInputChange,
+  onMoreImageInputChange,
+  onModalImageAdd,
+  onModalImageRemove,
+  onModalNutritionalsChange,
+  onProductModalAction,
+  imageFileInputRefs
 }){
   
 
@@ -64,31 +65,41 @@ function ProductModal({
                       <label htmlFor="imageUrl" className="form-label">
                         Main Image
                       </label>
-                      <input className="form-control" type="file" id="formFile" onChange={handleModalImageFileChange}/>
+                      <input ref={(el) => (imageFileInputRefs.current.mainImage = el)} name="imageUrl" className="form-control" type="file" id="formFile" onChange={(e) => onModalImageFileChange(e)}/>
                       <div className="text-center m-1">OR</div>
                       <input
                         name="imageUrl"
                         value={modalData.imageUrl}
-                        onChange={handleModalInputChange}
+                        onChange={onModalInputChange}
                         type="text"
                         className="form-control"
                         id="imageUrl"
                         placeholder="Please input image url"
+                        disabled={modalData.imageUrl ? true : false}
                       />                       
                     </div>
                     {
                       modalData.imageUrl && (
-                        <img
-                          src={modalData.imageUrl}
-                          alt={`${modalData.title} 主圖`}
-                          className="img-fluid"
-                        />
+                        <>
+                          <img
+                            src={modalData.imageUrl}
+                            alt={`${modalData.title} 主圖`}
+                            className="img-fluid"
+                          />
+                          <button
+                            type="button"
+                            className="btn btn-outline-danger w-100 mt-2"
+                            onClick={() => onModalImageRemove("mainImage")}
+                          >
+                            Cancel image
+                          </button>
+                        </>
                       )
                     }
                   </div>
                   {/* More images */}
                   <div className="mb-2 border p-3 rounded">
-                    <h6>More Images</h6>
+                    <h6>More Images (Maximum 5)</h6>
                     {modalData.imagesUrl?.map((url, index) => (
                       <div
                         key={index}
@@ -101,61 +112,53 @@ function ProductModal({
                           >
                             {index + 1}
                           </label>
+                          <input ref={(el) => (imageFileInputRefs.current[`moreImages-${index + 1}`] = el)} name="imagesUrl" className="form-control" type="file" id="formFile" onChange={(e) => onModalImageFileChange(e, index)}/>
+                          <div className="text-center m-1">OR</div>
                           <input
                             name="imagesUrl"
                             value={url}
                             onChange={(e) =>
-                              handleMoreImageInputChange(e, index)
+                              onMoreImageInputChange(e, index)
                             }
                             type="text"
                             className="form-control"
                             id={`moreImages-${index + 1}`}
                             placeholder={`Image url ${index + 1}`}
+                            disabled={url ? true : false}
                           />
                         </div>
                         {url && (
-                          <img
-                            src={url}
-                            alt={`moreImages-${index + 1}`}
-                            className="img-fluid"
-                          />
+                          <>
+                            <img
+                              src={url}
+                              alt={`moreImages-${index + 1}`}
+                              className="img-fluid"
+                            />
+                          </>
                         )}
-                      </div>
-                    ))}
-                    <div className="btn-group w-100">
-                      {
-                        modalData.imagesUrl === undefined && (
-                          <button
-                            type="button"
-                            className="btn btn-outline-primary"
-                            onClick={handleModalImageAdd}
-                          >
-                            Add more image
-                          </button>
-                        )
-                      }
-                      {modalData.imagesUrl?.length < 5 &&
-                        modalData.imagesUrl[
-                          modalData.imagesUrl.length - 1
-                        ] !== "" && (
-                          <button
-                            type="button"
-                            className="btn btn-outline-primary"
-                            onClick={handleModalImageAdd}
-                          >
-                            Add more image
-                          </button>
-                        )}
-                      {modalData.imagesUrl?.length >= 1 && (
                         <button
                           type="button"
-                          className="btn btn-outline-danger"
-                          onClick={handleModalImageRemove}
+                          className="btn btn-outline-danger w-100 mt-2"
+                          onClick={() => onModalImageRemove("moreImages", index)}
                         >
-                          Cancel image
+                          {`Cancel image ${index + 1}`}
                         </button>
-                      )}
-                    </div>
+                      </div>
+                    ))}
+                    {
+                      (modalData.imagesUrl === undefined || (modalData.imagesUrl?.length < 5 &&
+                        modalData.imagesUrl[
+                          modalData.imagesUrl.length - 1
+                        ] !== "")) && (
+                        <button
+                          type="button"
+                          className="btn btn-outline-primary w-100"
+                          onClick={onModalImageAdd}
+                        >
+                          Add more image
+                        </button>
+                      )
+                    } 
                   </div>
                 </div>
                 <div className="col-md-8">
@@ -166,7 +169,7 @@ function ProductModal({
                     <input
                       name="title"
                       value={modalData.title}
-                      onChange={handleModalInputChange}
+                      onChange={onModalInputChange}
                       type="text"
                       className="form-control"
                       id="title"
@@ -180,7 +183,7 @@ function ProductModal({
                     <input
                       name="category"
                       value={modalData.category}
-                      onChange={handleModalInputChange}
+                      onChange={onModalInputChange}
                       type="text"
                       className="form-control"
                       id="category"
@@ -194,7 +197,7 @@ function ProductModal({
                     <input
                       name="unit"
                       value={modalData.unit}
-                      onChange={handleModalInputChange}
+                      onChange={onModalInputChange}
                       type="text"
                       className="form-control"
                       id="unit"
@@ -210,7 +213,7 @@ function ProductModal({
                         <input
                           name="origin_price"
                           value={modalData.origin_price}
-                          onChange={handleModalInputChange}
+                          onChange={onModalInputChange}
                           type="number"
                           className="form-control"
                           id="origin_price"
@@ -227,7 +230,7 @@ function ProductModal({
                         <input
                           name="price"
                           value={modalData.price}
-                          onChange={handleModalInputChange}
+                          onChange={onModalInputChange}
                           type="number"
                           className="form-control"
                           id="price"
@@ -244,7 +247,7 @@ function ProductModal({
                     <textarea
                       name="description"
                       value={modalData.description}
-                      onChange={handleModalInputChange}
+                      onChange={onModalInputChange}
                       className="form-control"
                       id="description"
                       placeholder="Please enter the description"
@@ -258,7 +261,7 @@ function ProductModal({
                     <textarea
                       name="allergens"
                       value={modalData.allergens}
-                      onChange={handleModalInputChange}
+                      onChange={onModalInputChange}
                       className="form-control"
                       id="allergens"
                       placeholder="Please enter the allergens"
@@ -272,7 +275,7 @@ function ProductModal({
                     <textarea
                       name="ingredients"
                       value={modalData.ingredients}
-                      onChange={handleModalInputChange}
+                      onChange={onModalInputChange}
                       className="form-control"
                       id="ingredients"
                       placeholder="Please enter the ingredients"
@@ -299,7 +302,7 @@ function ProductModal({
                                 name={item.name}
                                 value={item.value}
                                 onChange={(e) =>
-                                  handleModalNutritionalsChange(e, index)
+                                  onModalNutritionalsChange(e, index)
                                 }
                                 id={item.name}
                                 type="number"
@@ -315,7 +318,7 @@ function ProductModal({
                     <input
                       name="is_enabled"
                       checked={modalData.is_enabled}
-                      onChange={handleModalInputChange}
+                      onChange={onModalInputChange}
                       className="form-check-input"
                       type="checkbox"
                       id="isEnabled"
@@ -342,7 +345,7 @@ function ProductModal({
                 <button
                   type="button"
                   className="btn btn-danger"
-                  onClick={handleProductModalAction}
+                  onClick={onProductModalAction}
                 >
                   刪除
                 </button>
@@ -350,7 +353,7 @@ function ProductModal({
                 <button
                   type="button"
                   className="btn btn-primary"
-                  onClick={handleProductModalAction}
+                  onClick={onProductModalAction}
                 >
                   確認
                 </button>
@@ -396,13 +399,15 @@ ProductModal.propTypes = {
     "title(en)": PropTypes.string,
     unit: PropTypes.string,
   }).isRequired,
-  closeModal: PropTypes.func.isRequired,
-  handleModalImageFileChange: PropTypes.func.isRequired,
-  handleModalInputChange: PropTypes.func.isRequired,
-  handleMoreImageInputChange: PropTypes.func.isRequired,
-  handleModalImageAdd: PropTypes.func.isRequired,
-  handleModalImageRemove: PropTypes.func.isRequired,
-  handleModalNutritionalsChange: PropTypes.func.isRequired,
-  handleProductModalAction: PropTypes.func.isRequired,
+  oncloseModal: PropTypes.func.isRequired,
+  onModalImageFileChange: PropTypes.func.isRequired,
+  onModalInputChange: PropTypes.func.isRequired,
+  onMoreImageInputChange: PropTypes.func.isRequired,
+  onModalImageAdd: PropTypes.func.isRequired,
+  onModalImageRemove: PropTypes.func.isRequired,
+  onModalNutritionalsChange: PropTypes.func.isRequired,
+  onProductModalAction: PropTypes.func.isRequired,
+  imageFileInputRefs: PropTypes.object.isRequired,
+
 }
 export default ProductModal
