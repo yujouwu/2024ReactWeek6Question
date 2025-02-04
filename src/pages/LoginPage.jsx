@@ -1,10 +1,9 @@
 // 外部 node_modules 資源
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import PropTypes from 'prop-types';
 
 // 內部 src 資源
-import "../assets/all.scss";
 import Footer from "../components/Footer";
 
 // 環境變數
@@ -25,7 +24,7 @@ function LoginPage({setIsAuth}){
     });
   };
 
-  const adminSignIn = async (e) => {
+  const handleAdminLogin = async (e) => {
     e.preventDefault();
     try {
       const response = await axios.post(`${BASE_URL}/admin/signin`, account);
@@ -42,6 +41,28 @@ function LoginPage({setIsAuth}){
     }
   };
 
+  const checkAdminLogin = async () => {
+    try {
+      await axios.post(`${BASE_URL}/api/user/check`);
+      // getProducts();
+      setIsAuth(true);
+    } catch (error) {
+      console.dir(error);
+      alert(error.response.data.message);
+    }
+  };
+
+  // 進入頁面時，確認是否有登入
+  useEffect(() => {
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("hexToken="))
+      ?.split("=")[1];
+    axios.defaults.headers.common["Authorization"] = token;
+
+    checkAdminLogin();
+  }, []);
+
   return (
     <>
     <div className="vh-100 d-flex flex-column justify-content-center">
@@ -49,7 +70,7 @@ function LoginPage({setIsAuth}){
         <h1 className="mb-5">
           請先登入 <i className="bi bi-box-arrow-in-left"></i>
         </h1>
-        <form onSubmit={adminSignIn} className="d-flex flex-column gap-3">
+        <form onSubmit={handleAdminLogin} className="d-flex flex-column gap-3">
           <div className="form-floating mb-3">
             <input
               name="username"

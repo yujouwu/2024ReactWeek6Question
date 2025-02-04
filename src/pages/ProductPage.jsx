@@ -4,7 +4,6 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 
 // 內部 src 資源
-import "../assets/all.scss"
 import Pagination from '../components/Pagination';
 import ProductModal from "../components/ProductModal";
 
@@ -12,67 +11,62 @@ import ProductModal from "../components/ProductModal";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
+const defaultModalData = {
+  allergens: "",
+  category: "",
+  content: "",
+  description: "",
+  "description(en)": "",
+  imageUrl: "",
+  imagesUrl: [],
+  ingredients: "",
+  is_enabled: false,
+  nutritionalInfo: [
+    {
+      name: "Calories (kcal)",
+      value: "",
+    },
+    {
+      name: "Protein (g)",
+      value: "",
+    },
+    {
+      name: "Fat (g)",
+      value: "",
+    },
+    {
+      name: "Carbohydrates (g)",
+      value: "",
+    },
+    {
+      name: "Sugar (g)",
+      value: "",
+    },
+    {
+      name: "Sodium (mg)",
+      value: "",
+    },
+  ],
+  origin_price: "",
+  price: "",
+  title: "",
+  "title(en)": "",
+  unit: "",
+};
+
 function ProductPage(){
   // Modal 相關
-  const defaultModalData = {
-    allergens: "",
-    category: "",
-    content: "",
-    description: "",
-    "description(en)": "",
-    imageUrl: "",
-    imagesUrl: [],
-    ingredients: "",
-    is_enabled: false,
-    nutritionalInfo: [
-      {
-        name: "Calories (kcal)",
-        value: "",
-      },
-      {
-        name: "Protein (g)",
-        value: "",
-      },
-      {
-        name: "Fat (g)",
-        value: "",
-      },
-      {
-        name: "Carbohydrates (g)",
-        value: "",
-      },
-      {
-        name: "Sugar (g)",
-        value: "",
-      },
-      {
-        name: "Sodium (mg)",
-        value: "",
-      },
-    ],
-    origin_price: "",
-    price: "",
-    title: "",
-    "title(en)": "",
-    unit: "",
-  };
-  const imageFileInputRefs = useRef({});
+  
   const productModalRef = useRef(null);
   const [modalType, setModalType] = useState("");
   const [modalData, setModalData] = useState(defaultModalData);
-
-  const clearImageFileInputValue = () => {
-    Object.values(imageFileInputRefs.current).forEach((input) => {
-      if (input) input.value = "";  // 清空檔案輸入框
-    })
-  }
 
   const openModal = (product, type) => {
     setModalType(type);
     setModalData(product);
 
     productModalRef.current.show();
-    clearImageFileInputValue();
+    // clearImageFileInputValue();
   };
 
   const closeModal = () => {
@@ -110,7 +104,6 @@ function ProductPage(){
       ...prevData,
       imagesUrl: newImages,
     }));
-    imageFileInputRefs.current[`moreImages-${index + 1}`].value = "";
   };
 
   const handleModalImageAdd = () => {
@@ -128,7 +121,6 @@ function ProductPage(){
         ...prevData,
         imageUrl: "",
       }));
-      imageFileInputRefs.current.mainImage.value = "";
     }else{
       const newImages = [...modalData.imagesUrl];
       // newImages.pop();
@@ -163,6 +155,8 @@ function ProductPage(){
     } catch (error) {
       console.dir(error);
       alert(error.response.data.message)
+    } finally{
+      e.target.value ='';
     }
   }
   
@@ -390,7 +384,6 @@ function ProductPage(){
         onModalImageRemove={handleModalImageRemove}
         onModalNutritionalsChange={handleModalNutritionalsChange}
         onProductModalAction={handleProductModalAction}
-        imageFileInputRefs={imageFileInputRefs}
       />
     </>
   )

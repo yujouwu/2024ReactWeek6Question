@@ -12,7 +12,6 @@ function ProductModal({
   onModalImageRemove,
   onModalNutritionalsChange,
   onProductModalAction,
-  imageFileInputRefs
 }){
   
 
@@ -64,7 +63,7 @@ function ProductModal({
                       <label htmlFor="imageUrl" className="form-label">
                         Main Image
                       </label>
-                      <input ref={(el) => (imageFileInputRefs.current.mainImage = el)} name="imageUrl" className="form-control" type="file" id="formFile" onChange={(e) => onModalImageFileChange(e)}/>
+                      <input name="imageUrl" className="form-control" type="file" id="formFile" onChange={(e) => onModalImageFileChange(e)}/>
                       <div className="text-center m-1">OR</div>
                       <input
                         name="imageUrl"
@@ -111,7 +110,7 @@ function ProductModal({
                           >
                             {index + 1}
                           </label>
-                          <input ref={(el) => (imageFileInputRefs.current[`moreImages-${index + 1}`] = el)} name="imagesUrl" className="form-control" type="file" id="formFile" onChange={(e) => onModalImageFileChange(e, index)}/>
+                          <input name="imagesUrl" className="form-control" type="file" id="formFile" onChange={(e) => onModalImageFileChange(e, index)}/>
                           <div className="text-center m-1">OR</div>
                           <input
                             name="imagesUrl"
@@ -406,7 +405,5 @@ ProductModal.propTypes = {
   onModalImageRemove: PropTypes.func.isRequired,
   onModalNutritionalsChange: PropTypes.func.isRequired,
   onProductModalAction: PropTypes.func.isRequired,
-  imageFileInputRefs: PropTypes.object.isRequired,
-
 }
 export default ProductModal
