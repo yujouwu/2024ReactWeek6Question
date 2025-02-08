@@ -4,13 +4,13 @@ import axios from "axios";
 import PropTypes from 'prop-types';
 
 // 內部 src 資源
-import Footer from "../components/Footer";
+import Footer from "../../components/Footer";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 
-function LoginPage({setIsAuth}){
+function AdminLogin({setIsAuth}){
   const [account, setAccount] = useState({
     username: "example@test.com",
     password: "example",
@@ -105,7 +105,7 @@ function LoginPage({setIsAuth}){
     </>
   )
 }
-LoginPage.propTypes = {
+AdminLogin.propTypes = {
   setIsAuth: PropTypes.func.isRequired
 }
-export default LoginPage
+export default AdminLogin

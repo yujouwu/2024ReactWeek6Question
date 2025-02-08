@@ -1,50 +1,33 @@
 
+npm i axios bootstrap react-hook-form react-loading   
+
+取得產品列表 - 客戶
+加入購物車  
+取得購物車  
+
+刪除購物車項目 全部 
+刪除購物車項目 單一  
+調整購物車產品數量 (API 路徑要傳的是 cart id，帶的資料傳的是 product id)   
+
+# 結帳付款 
+1. 從 useForm 取出需要的函式、狀態（register、handleSubmit、errors）
+2. 透過 register 註冊要綁定的狀態
+3. 撰寫錯誤提示、樣式
+4. 撰寫表單提交的函式
+--
+5. 送出訂單後，購物車需要清除原本項目（後端預設會清除，前端只要重新取得購物車即可）
+6. reset 清空表單
+7. 購物車無產品時不建議發出結帳請求，為結帳按鈕加上 disabled 樣式
 
 
-### 分頁功能
-1. 新增一個狀態用來儲存頁面資訊 V 
-2. 從 產品 API 取得頁面資訊，並存進狀態中 V 
-3. 透過 Array.from 的技巧產生出對應長度的陣列 V
-4. 撰寫頁碼顯示邏輯、active、disabled 樣式 V
-5. 實作換頁功能（調整 getProducts 函式） V
 
-### 圖片上傳
-* input 模板 V 
-1. 撰寫監聽事件的函式 V 
-2. 取得檔案的位置（e.target.files[0]） V 
-3. 使用 FormData 格式上傳 V 
-4. 將回傳的圖片 URL 存到狀態中 V
+# 加入 Loading 狀態
+1. 全螢幕
+- 取得產品列表  
+- 調整購物車品項，數量 / 刪除 
+- 清空購物車  
+- 結帳 
 
-### 拆分元件
-大原則先以頁面為單位來拆分
-因此有：登入頁面、產品頁面
-頁面元件可以放在 src/pages 下
-
-### 頁面元件 - 登入頁面
-1. 先拆 UI V 
-2. 找到屬於該頁面的狀態與函式，搬到元件中 V
-3. 匯入會用到的 hooks、函式 V
-4. 在 App.jsx 匯入元件 V
-
-### 頁面元件 - 產品頁面 
-可仿照登入頁面的步驟 V 
-步驟非一定，可以按個人習慣調整 V 
-
-### 共用元件
-基礎的共用元件 V 
-共用元件常放在 `src/components` 下 V
-
-### 分頁元件
-1. 拆 UI V
-2. 想一下 props 有哪些 V
-3. 在對應頁面元件中匯入 V
-4. 傳入 props V
-5. import 需要的 hook、函式，宣告常數（BASE_URL、API_PATH） V
-
-### ProductModal / DelProductModal
-1. 拆 UI V 
-2. 想一下狀態與邏輯要寫在元件還是頁面（可新增一個狀態來控制 Modal 是否開啟） V 
-3. 在對應頁面元件中匯入 V 
-4. 設定 props V 
-5. 在父元件傳入 props V
-6. import 需要的 hook、函式，宣告常數（BASE_URL、API_PATH）V
+2. 部分 - 加入購物車
+- 單一產品頁 / 產品 Modal 
+- 產品列表 

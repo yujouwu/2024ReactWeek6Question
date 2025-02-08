@@ -4,8 +4,8 @@ import axios from "axios";
 import { Modal } from "bootstrap";
 
 // 內部 src 資源
-import Pagination from '../components/Pagination';
-import ProductModal from "../components/ProductModal";
+import Pagination from '../../components/Pagination';
+import ProductModal from "../../components/ProductModal";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -54,7 +54,7 @@ const defaultModalData = {
   unit: "",
 };
 
-function ProductPage(){
+function AdminProducts(){
   // Modal 相關
   
   const productModalRef = useRef(null);
@@ -389,4 +389,4 @@ function ProductPage(){
   )
 }
 
-export default ProductPage
+export default AdminProducts

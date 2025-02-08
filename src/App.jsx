@@ -2,8 +2,8 @@
 import { useState } from "react";
 
 // 內部 src 資源
-import LoginPage from "./pages/LoginPage";
-import ProductPage from "./pages/ProductPage";
+import AdminLogin from "./pages/admin/AdminLogin";
+import AdminProducts from "./pages/admin/AdminProducts";
 
 
 function App() {
@@ -12,7 +12,7 @@ function App() {
 
   return (
     <>
-      {isAuth ? <ProductPage /> : <LoginPage setIsAuth={setIsAuth}/>}
+      {isAuth ? <AdminProducts /> : <AdminLogin setIsAuth={setIsAuth}/>}
     </>
   );
 }
