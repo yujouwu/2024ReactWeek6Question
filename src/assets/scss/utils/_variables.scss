@@ -300,6 +300,7 @@ $cyans: (
 // scss-docs-start theme-color-variables
 // $primary:       $blue !default;
 $primary:       $red-100 !default;  // *custom
+$primary-dark:       $red-200 !default;  // *custom
 $secondary:     $gray-600 !default;
 $success:       $green !default;
 $info:          $cyan !default;
@@ -312,6 +313,7 @@ $dark:          $gray-900 !default;
 // scss-docs-start theme-colors-map
 $theme-colors: (
   "primary":    $primary,
+  "primary-dark":    $primary-dark,  // *custom
   "secondary":  $secondary,
   "success":    $success,
   "info":       $info,
@@ -564,12 +566,14 @@ $box-shadow-inset:            inset 0 1px 2px rgba($black, .075) !default;
 // scss-docs-end box-shadow-variables
 
 $component-active-color:      $white !default;
-$component-active-bg:         $primary !default;
+// $component-active-bg:         $primary !default;
+$component-active-bg:         $primary-dark !default; // *custom
 
 // scss-docs-start focus-ring-variables
 $focus-ring-width:      .25rem !default;
 $focus-ring-opacity:    .25 !default;
-$focus-ring-color:      rgba($primary, $focus-ring-opacity) !default;
+// $focus-ring-color:      rgba($primary, $focus-ring-opacity) !default;
+$focus-ring-color:      rgba($primary-dark, $focus-ring-opacity) !default;  // *custom
 $focus-ring-blur:       0 !default;
 $focus-ring-box-shadow: 0 0 $focus-ring-blur $focus-ring-width $focus-ring-color !default;
 // scss-docs-end focus-ring-variables

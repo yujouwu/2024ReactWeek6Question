@@ -1,3 +1,4 @@
+import PropTypes from 'prop-types';
 import logo from '../assets/img/Strawberry cake icons created by Mihimihi - Flaticon.png';
 
 function FrontendLayout ({basketQty}) {
@@ -46,5 +47,9 @@ function FrontendLayout ({basketQty}) {
 
     // <footer></footer>
   )
+}
+
+FrontendLayout.propTypes = {
+  basketQty: PropTypes.number
 }
 export default FrontendLayout

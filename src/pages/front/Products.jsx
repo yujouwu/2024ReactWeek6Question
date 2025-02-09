@@ -10,10 +10,17 @@ import ReactLoading from 'react-loading';
 import Pagination from "../../components/Pagination";
 // import ProductModal from "../../components/ProductModal";
 import FrontendLayout from "../../layout/FrontendLayout";
+import Input from "../../components/form/Input";
+import Textarea from "../../components/form/Textarea";
+import CheckboxRadio from "../../components/form/CheckboxRadio";
+// import Select from "../../components/form/Select"; // 留著後面使用
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
+
+// 產品分類
+// const categories = ['cupcakes', 'cakes', 'vegan cakes', 'wedding cakes', 'preserves', 'cookies']; // 留著後面使用
 
 function Products() {
   const [products, setProducts] = useState([]);
@@ -30,7 +37,6 @@ function Products() {
       const response = await axios.get(
         `${BASE_URL}/api/${API_PATH}/products?page=${page}`
       );
-      console.log(response);
       setProducts(response.data.products);
       setPagination(response.data.pagination)
     } catch (error) {
@@ -42,10 +48,9 @@ function Products() {
 
   // Modal 相關
   const productModalRef = useRef(null);
-
   const openModal = () => {
     productModalRef.current.show();
-    setCartQuantity(1);
+    setSelectedQuantity(1);
   };
 
   const closeModal = () => {
@@ -68,13 +73,11 @@ function Products() {
   useEffect(() => {
     if (product) {
       setMainImage(product.imageUrl); // 當 product 更新後執行
-      // setCartQuantity(1);
     }
   }, [product]);
 
   // 加入購物車
-  const [cartQuantity, setCartQuantity] = useState(1);
-
+  const [selectedQuantity, setSelectedQuantity] = useState(1);
   const addCart = async(productId, qty) => {
     setIsLoading(true)
     try {
@@ -106,7 +109,6 @@ function Products() {
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const response = await axios.get(url);
-      console.log('getCart:', response);
       const cartData = response.data.data;
       setCart(cartData);
       setBasketQty(cartData.carts?.reduce((sum, cart) => sum + cart.qty, 0));
@@ -177,8 +179,13 @@ function Products() {
     register, // state
     handleSubmit,
     formState: {errors},
-    reset
-  } = useForm();
+    reset,
+  } = useForm({
+    defaultValues: {
+      category: ""
+    },
+    mode: 'onTouched'
+  });
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
@@ -191,7 +198,7 @@ function Products() {
     }
     checkout(userInfo);
   })
-
+  
   // 客戶購物 - 結帳
   const checkout = async(data) => {
     setIsScreenLoading(true);
@@ -328,16 +335,16 @@ function Products() {
                       type="button"
                       className="btn border rounded-circle"
                       aria-label="Decrease quantity"
-                      disabled={cartQuantity === 1}
+                      disabled={selectedQuantity === 1}
                       onClick={() =>
-                        setCartQuantity((prev) => Math.max(1, prev - 1))
+                        setSelectedQuantity((prev) => Math.max(1, prev - 1))
                       }
                     >
                       <i className="bi bi-dash"></i>
                     </button>
                     <input
                       type="number"
-                      value={cartQuantity}
+                      value={selectedQuantity}
                       className="text-center border-0 border-bottom"
                       min="1"
                       max="10"
@@ -345,16 +352,16 @@ function Products() {
                         let num = Number(e.target.value);
                         if (isNaN(num)) num = 1; // 防止 NaN
                         num = Math.max(1, Math.min(10, num)); // 限制範圍在 1 到 10 之間
-                        setCartQuantity(num);
+                        setSelectedQuantity(num);
                       }}
                     />
                     <button
                       type="button"
                       className="btn border rounded-circle"
                       aria-label="Increase quantity"
-                      disabled={cartQuantity === 10}
+                      disabled={selectedQuantity === 10}
                       onClick={() =>
-                        setCartQuantity((prev) => Math.min(10, prev + 1))
+                        setSelectedQuantity((prev) => Math.min(10, prev + 1))
                       }
                     >
                       <i className="bi bi-plus"></i>
@@ -363,7 +370,7 @@ function Products() {
                   <button
                     type="button"
                     className="btn btn-primary"
-                    onClick={() => addCart(product.id, cartQuantity)}
+                    onClick={() => addCart(product.id, selectedQuantity)}
                     disabled={isLoading}
                   >
                     Add to Bag
@@ -538,101 +545,86 @@ function Products() {
         <p className="h4">Checkout</p>
         <p className="h5">Add delivery information</p>
         <form onSubmit={onSubmit}>
-          <div className="mb-3">
-            <label htmlFor="name" className="form-label">
-              Name
-            </label>
-            <input
-              {...register('name', {
-                required: 'Name is required'
-              }) }
-              type="text"
-              className={`form-control ${errors.name ? 'is-invalid' : ''}`}
-              id="name"
-              aria-describedby="name"
-            />
+          {/* 留著後面使用 */}
+          {/* <Select 
+            register={register}
+            errors={errors}
+            id="category"
+            labelText="Category"
+            rules={{required: 'Category is required.'}}
+          >
+            <option value="" disabled>Please select category</option>
             {
-              errors.name && (<div className="invalid-feedback">{errors?.name?.message}</div>)
+              categories.map((category) => (
+                <option key={category} value={category}>{category}</option>
+              ))
             }
-          </div>
-          <div className="mb-3">
-            <label htmlFor="email" className="form-label">
-              Email
-            </label>
-            <input
-              {...register('email', {
-                required: 'Email is required',
-                pattern: {
-                  value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
-                  message: 'Invalid email format'
-                }
-              })}
-              type="email" className={`form-control ${errors.email ? 'is-invalid' : ''}`} id="email"
-            />
-            {
-              errors.email && (<div className="invalid-feedback">{errors?.email?.message}</div>)
-            }
-          </div>
-          <div className="mb-3">
-            <label htmlFor="tel" className="form-label">
-              Phone Number
-            </label>
-            <input
-              {...register('tel', {
-                required: 'Phone Number is required',
-                pattern: {
-                  value: /^(0[2-8]\d{7}|09\d{8})$/,
-                  message: 'Invalid phone number format'
-                }
-              })}
-              type="tel" className={`form-control ${errors.tel ? 'is-invalid' : ''}`} id="tel" 
-            />
-            {
-              errors.tel && (<div className="invalid-feedback">{errors?.tel?.message}</div>)
-            }
-          </div>
-          <div className="mb-3">
-            <label htmlFor="address" className="form-label">
-              Address
-            </label>
-            <input
-              {...register('address', {
-                required: 'Address is required'
-              })}
-              type="text" className={`form-control ${errors.address ? 'is-invalid' : ''}`} id="address" 
-            />
-            {
-              errors.address && (<div className="invalid-feedback">{errors?.address?.message}</div>)
-            }
-          </div>
-          <div className="mb-3">
-            <label htmlFor="message" className="form-label">
-              Message
-            </label>
-            <textarea
-              {...register('message')}
-              type="text" className={`form-control ${errors.message ? 'is-invalid' : ''}`} id="message" 
-            />
-            {
-              errors.message && (<div className="invalid-feedback">{errors?.message?.message}</div>)
-            }
-          </div>
-          <div className="mb-3 form-check">
-            <input
-              {...register('isCheckForm', {
-                required: 'Please check the box to agree to the Terms and Conditions.'
-              })}
-              type="checkbox"
-              className={`form-check-input ${errors.isCheckForm ? 'is-invalid' : ''}`}
-              id="isCheckForm"
-            />
-            <label className="form-check-label" htmlFor="isCheckForm">
-              Check me out
-            </label>
-            {
-              errors.isCheckForm && (<div className="invalid-feedback">{errors?.isCheckForm?.message}</div>)
-            }
-          </div>
+          </Select> */}
+          <Input
+            register={register} 
+            errors={errors}
+            id="name"
+            labelText="Name"
+            type="text"
+            rules={{
+              required: 'Name is required'
+            }}
+          />
+          <Input
+            register={register} 
+            errors={errors}
+            id="email"
+            labelText="Email"
+            type="email"
+            rules={{
+              required: 'Email is required',
+              pattern: {
+                value: /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/,
+                message: 'Invalid email format'
+              }
+            }}
+          />
+          <Input
+            register={register} 
+            errors={errors}
+            id="tel"
+            labelText="Phone Number"
+            type="tel"
+            rules={{
+              required: 'Phone Number is required',
+              pattern: {
+                value: /^(0[2-8]\d{7}|09\d{8})$/,
+                message: 'Invalid phone number format'
+              }
+            }}
+          />
+          <Input
+            register={register} 
+            errors={errors}
+            id="address"
+            labelText="Address"
+            type="text"
+            rules={{
+              required: 'Address is required'
+            }}
+          />
+          <Textarea
+            register={register} 
+            errors={errors}
+            id="message"
+            labelText="Message"
+            rules={{}}
+          />
+          <CheckboxRadio 
+            register={register}
+            errors={errors}
+            type="checkbox"
+            id="isCheckForm"
+            labelText="Check me out"
+            rules={{
+              required: 'Please check the box to agree to the Terms and Conditions.'
+            }}
+          />
           <button type="submit" className="btn btn-primary" disabled={cart.carts?.length < 1}>
             Submit Order
           </button>
