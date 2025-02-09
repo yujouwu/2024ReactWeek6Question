@@ -1,0 +1,71 @@
+// Bootstrap Icons
+@import 'bootstrap-icons/font/bootstrap-icons.min.css';
+
+@import "bootstrap/scss/functions";
+@import "./utils/variables";  // 自定義變數
+
+// 1. 元件(進階)* 或 Bootstrap
+@import 'bootstrap/scss/bootstrap';
+@import './components/buttons';
+
+// 2. 雜項(進階)*
+@import "./utils/utilities";  // 自定義 utilities
+@import "bootstrap/scss/utilities/api";
+
+// 3. 共用樣式
+// @import './base/base';
+// @import './layout/header.scss';
+// @import './layout/footer.scss';
+
+// 4. 分頁樣式
+// @import './pages/index.scss';
+
+// 其他
+
+
+*, *::before, *::after{
+  // outline: 1px solid red;
+}
+
+a{
+  color: inherit;
+  text-decoration: none;
+}
+
+// Hide Arrows From Input Number
+/* Chrome, Safari, Edge, Opera */
+input::-webkit-outer-spin-button,
+input::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+// Hide Arrows From Input Number
+/* Firefox */
+input[type=number] {
+  -moz-appearance: textfield;
+}
+
+input:focus, textarea:focus, select:focus {
+  outline: none;
+  box-shadow: none;
+  border-color: inherit;
+}
+
+.main-image {
+  height: 300px;
+}
+.more-images {
+  height: 150px;
+  border: 1px solid $gray-400;
+  border-radius: 3px;
+  padding: 6px;
+  cursor: pointer;
+  &.active {
+    border: 3px solid $red-200;
+  }
+}
+
+.cursor-pointer {
+  cursor: pointer;
+}

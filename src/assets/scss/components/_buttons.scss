@@ -1,0 +1,8 @@
+.btn-primary{
+  &:hover{
+    background-color: $red-200;
+  }
+  &:active{
+    background-color: $red-200 !important;
+  }
+}
