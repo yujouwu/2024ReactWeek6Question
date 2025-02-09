@@ -1,10 +1,12 @@
-function FrontendLayout ({cart, basketQty}) {
+import logo from '../assets/img/Strawberry cake icons created by Mihimihi - Flaticon.png';
+
+function FrontendLayout ({basketQty}) {
   return (
     <header>
         <nav className="navbar navbar-expand-lg bg-body-tertiary">
           <div className="container">
             <a className="navbar-brand d-flex align-items-center" href="#">
-              <img src="../src/assets/img/Strawberry cake icons created by Mihimihi - Flaticon.png" alt="strawberry cake icons" className="img-fluid me-1" width="30px" />
+              <img src={logo} alt="strawberry cake icons" className="img-fluid me-1" width="30px" />
               Regis's
             </a>
             <div className="order-lg-1">
@@ -18,14 +20,6 @@ function FrontendLayout ({cart, basketQty}) {
                     </span>
                   )
                 }
-                {/* {
-                  cart && (
-                    <span className="position-absolute top-0 start-100 translate-middle badge rounded-pill bg-danger">
-                      {cart.carts?.reduce((sum, cart) => sum + cart.qty, 0)}
-                      <span className="visually-hidden">unread messages</span>
-                    </span>
-                  )
-                } */}
               </button>
             
               <button className="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">

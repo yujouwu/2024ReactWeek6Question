@@ -216,7 +216,7 @@ function Products() {
 
   return (
     <>
-      <FrontendLayout cart={cart} basketQty={basketQty}/>
+      <FrontendLayout basketQty={basketQty}/>
       {/* product list */}
       <div className="container">
         <h1 className="text-center">All Products</h1>
