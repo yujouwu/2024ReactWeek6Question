@@ -8,7 +8,7 @@ import ReactLoading from 'react-loading';
 
 // 內部 src 資源
 import Pagination from "../../components/Pagination";
-import ProductModal from "../../components/ProductModal";
+// import ProductModal from "../../components/ProductModal";
 import FrontendLayout from "../../layout/FrontendLayout";
 
 // 環境變數
@@ -20,6 +20,8 @@ function Products() {
   const [product, setProduct] = useState({});
   const [isScreenLoading, setIsScreenLoading] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  // Pagination
+  const [pagination, setPagination] = useState({});
 
   // 取得產品列表
   const getProducts = async (page = 1) => {
@@ -29,8 +31,8 @@ function Products() {
         `${BASE_URL}/api/${API_PATH}/products?page=${page}`
       );
       console.log(response);
-
       setProducts(response.data.products);
+      setPagination(response.data.pagination)
     } catch (error) {
       console.dir(error);
     } finally{
@@ -251,7 +253,7 @@ function Products() {
           ))}
         </div>
         <div className="mt-3 d-flex justify-content-center">
-          {/* <Pagination pagination={pagination} getProducts={getProducts}/> */}
+          <Pagination pagination={pagination} getProducts={getProducts}/>
         </div>
       </div>
 
