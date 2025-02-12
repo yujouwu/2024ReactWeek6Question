@@ -6,6 +6,7 @@ import { Modal } from "bootstrap";
 // 內部 src 資源
 import Pagination from '../../components/Pagination';
 import ProductModal from "../../components/ProductModal";
+import AdminLayout from "../../layout/AdminLayout";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -312,7 +313,8 @@ function AdminProducts(){
 
   return (
     <>
-      <div className="container">
+      <AdminLayout />
+      {/* <div className="container">
         <div className="row mt-5">
           <div className="col">
             <div className="d-flex justify-content-between align-items-center">
@@ -371,7 +373,7 @@ function AdminProducts(){
           </div>
           <Pagination pagination={pagination} getProducts={getProducts}/>
         </div>
-      </div>
+      </div> */}
 
       <ProductModal 
         modalType={modalType}
