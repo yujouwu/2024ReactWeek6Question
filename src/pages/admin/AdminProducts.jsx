@@ -314,7 +314,7 @@ function AdminProducts(){
   return (
     <>
       <AdminLayout />
-      {/* <div className="container">
+      <div className="container">
         <div className="row mt-5">
           <div className="col">
             <div className="d-flex justify-content-between align-items-center">
@@ -373,7 +373,7 @@ function AdminProducts(){
           </div>
           <Pagination pagination={pagination} getProducts={getProducts}/>
         </div>
-      </div> */}
+      </div>
 
       <ProductModal 
         modalType={modalType}

@@ -1,8 +1,10 @@
 import logo from "../assets/img/Strawberry cake icons created by Mihimihi - Flaticon.png";
+import Message from "../components/Message";
 
 function AdminLayout() {
   return (
     <>
+      <Message />
       <nav
         className="navbar navbar-expand-lg bg-body-tertiary"
         data-bs-theme="dark"
@@ -48,7 +50,7 @@ function AdminLayout() {
           </div>
         </div>
       </nav>
-      <div className="d-flex bg-success" style={{minHeight: 'calc(100vh - 55px)'}}>
+      <div className="d-flex" style={{minHeight: 'calc(100vh - 55px)'}}>
         <div className="bg-light" style={{ width: "200px" }}>
           <div className="list-group list-group-flush">
             <a
