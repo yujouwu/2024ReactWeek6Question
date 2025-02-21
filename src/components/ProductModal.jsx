@@ -14,7 +14,6 @@ function ProductModal({
   onProductModalAction,
 }){
   
-
   return (
     // Modal
     <div

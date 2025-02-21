@@ -1,12 +1,12 @@
 // 外部 node_modules 資源
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useContext } from "react";
 import axios from "axios";
 import { Modal } from "bootstrap";
 
 // 內部 src 資源
 import Pagination from '../../components/Pagination';
 import ProductModal from "../../components/ProductModal";
-import AdminLayout from "../../layout/AdminLayout";
+import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../../store/messageStore";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -57,7 +57,6 @@ const defaultModalData = {
 
 function AdminProducts(){
   // Modal 相關
-  
   const productModalRef = useRef(null);
   const [modalType, setModalType] = useState("");
   const [modalData, setModalData] = useState(defaultModalData);
@@ -67,7 +66,6 @@ function AdminProducts(){
     setModalData(product);
 
     productModalRef.current.show();
-    // clearImageFileInputValue();
   };
 
   const closeModal = () => {
@@ -188,13 +186,13 @@ function AdminProducts(){
           is_enabled: modalData.is_enabled ? 1 : 0,
         }
       });
-      alert(response.data.message);
-      return true;
+      // alert(response.data.message);
+      return response.data;
     } catch (error) {
       console.dir(error);
-      const errorMessage = error.response.data.message.join(", ");    
-      alert(`新增失敗: ${errorMessage}`);
-      return false;
+      // const errorMessage = error.response.data.message.join(", ");    
+      // alert(`更新失敗: ${error.response.data.message}`);
+      return error?.response?.data;
     }
   };
 
@@ -208,52 +206,29 @@ function AdminProducts(){
           is_enabled: modalData.is_enabled ? 1 : 0,
         }
       });
-      alert(response.data.message);
-      return true;
+      // alert(response.data.message);
+      return response.data;
     } catch (error) {
       console.dir(error);
-      alert(`更新失敗: ${error.response.data.message}`);
-      return false;
+      // alert(`更新失敗: ${error.response.data.message}`);
+      return error?.response?.data;
     }
   }
 
   const deleteProduct = async () => {
     try {
       const response = await axios.delete(`${BASE_URL}/api/${API_PATH}/admin/product/${modalData.id}`);
-      alert(response.data.message);
-      return true;
+      // alert(response.data.message);
+      return response.data;
     } catch (error) {
       console.dir(error);
-      alert(`刪除失敗: ${error.response.data.message}`);
-      return false;
+      // alert(`更新失敗: ${error.response.data.message}`);
+      return error?.response?.data;
     }
   }
 
-  // 原本寫法
-  // const handleProductModalAction = async () => {
-  //   let actionSuccess = false;
+  const [, dispatch] = useContext(MessageContext);
 
-  //   switch (modalType) {
-  //     case "create":
-  //       actionSuccess = await createProduct();
-  //       break;
-  //     case "edit":
-  //       actionSuccess = await editProduct();
-  //       break;
-  //     case "delete":
-  //       actionSuccess = await deleteProduct();
-  //       break;
-  //     default:
-  //       throw new Error("unknown modalType");
-  //   }
-
-  //   if (actionSuccess) {
-  //     closeModal();
-  //     getProducts();
-  //   }
-  // };
-
-  // 助教給予的建議
   const handleProductModalAction = async () => {
     const actionMap = {
       create: createProduct,
@@ -267,45 +242,21 @@ function AdminProducts(){
       return;
     }
   
-    const actionSuccess = await action();
+    const { success, message} = await action();
   
-    if (actionSuccess) {
+    if (success) {
+      handleSuccessMessage(dispatch, message);
       closeModal();
       getProducts();
+    }else{
+      handleErrorMessage(dispatch, message);
     }
   };
 
-  const checkAdminLogin = async () => {
-    try {
-      await axios.post(`${BASE_URL}/api/user/check`);
-      getProducts();
-      // setIsAuth(true);
-    } catch (error) {
-      console.dir(error);
-      alert(error.response.data.message);
-    }
-  };
-
-  // 使用 useEffect 監聽 tempProduct 的變化
-  // useEffect(() => {
-  //   if (tempProduct) {
-  //     setMainImage(tempProduct.imageUrl); // 當 tempProduct 更新後執行
-  //   }
-  // }, [tempProduct]);
-
-
-  // 進入頁面時，確認是否有登入
   useEffect(() => {
-    const token = document.cookie
-      .split("; ")
-      .find((row) => row.startsWith("hexToken="))
-      ?.split("=")[1];
-    axios.defaults.headers.common["Authorization"] = token;
-
     // 建立 Modal 實體
     productModalRef.current = new Modal("#productModal");
-
-    checkAdminLogin();
+    getProducts();
   }, []);
 
   // Pagination
@@ -313,7 +264,6 @@ function AdminProducts(){
 
   return (
     <>
-      <AdminLayout />
       <div className="container">
         <div className="row mt-5">
           <div className="col">
@@ -352,7 +302,7 @@ function AdminProducts(){
                       <div className="btn-group">
                         <button
                           type="button"
-                          className="btn btn-outline-primary"
+                          className="btn btn-outline-info"
                           onClick={() => openModal(product, "edit")}
                         >
                           編輯
@@ -392,3 +342,7 @@ function AdminProducts(){
 }
 
 export default AdminProducts
+
+
+
+

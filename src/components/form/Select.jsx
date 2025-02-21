@@ -30,3 +30,22 @@ Select.propTypes = {
   disabled: PropTypes.bool
 };
 export default Select;
+
+// 使用範例
+// 留著後面使用
+{/* <Select 
+  register={register}
+  errors={errors}
+  id="category"
+  labelText="Category"
+  rules={{required: 'Category is required.'}}
+>
+  <option value="" disabled>Please select category</option>
+  {
+    categories.map((category) => (
+      <option key={category} value={category}>{category}</option>
+    ))
+  }
+</Select> */}
+// 產品分類
+// const categories = ['cupcakes', 'cakes', 'vegan cakes', 'wedding cakes', 'preserves', 'cookies']; // 留著後面使用

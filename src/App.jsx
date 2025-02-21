@@ -1,20 +1,21 @@
 // 外部 node_modules 資源
-import { useState } from "react";
+import { useReducer } from "react";
+import { RouterProvider } from "react-router-dom";
 
 // 內部 src 資源
-import AdminLogin from "./pages/admin/AdminLogin";
-import AdminProducts from "./pages/admin/AdminProducts";
-import Products from "./pages/front/Products";
+import routes from "./routes";
+import { initState, MessageContext, messageReducer } from "./store/messageStore";
+import Message from "./components/Message";
 
 
 function App() {
-  // 登入相關
-  const [isAuth, setIsAuth] = useState(true);
-
+  const reducer = useReducer(messageReducer, initState)
   return (
     <>
-      {isAuth ? <AdminProducts /> : <AdminLogin setIsAuth={setIsAuth}/>}
-      {/* <Products /> */}
+      <MessageContext.Provider value={reducer}>
+        <Message/>
+        <RouterProvider router={routes}/>
+      </MessageContext.Provider>
     </>
   );
 }

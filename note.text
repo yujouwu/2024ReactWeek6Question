@@ -1,36 +1,40 @@
+-OJVG-duDTn6-rgdeBG6
 
-npm i axios bootstrap react-hook-form react-loading  V
+# 安裝 react router => npm i react-router-dom@6 V
 
-取得產品列表 - 客戶 V 
-加入購物車  V 
-取得購物車  V
+# 路由設定
+1. 建立 router 與撰寫路由表（先寫首頁即可），副檔名要是 .jsx V 
+2. 在 main.jsx 下 return RouterProvider，記得將 router 作為 props 傳入 V 
 
-刪除購物車項目 全部 V
-刪除購物車項目 單一  V
-調整購物車產品數量 (API 路徑要傳的是 cart id，帶的資料傳的是 product id)  V
+前台頁面
 
-# 結帳付款 
-1. 從 useForm 取出需要的函式、狀態（register、handleSubmit、errors） V
-2. 透過 register 註冊要綁定的狀態 V
-3. 撰寫錯誤提示、樣式 V
-4. 撰寫表單提交的函式 V
---
-5. 送出訂單後，購物車需要清除原本項目（後端預設會清除，前端只要重新取得購物車即可）V
-6. reset 清空表單 V
-7. 購物車無產品時不建議發出結帳請求，為結帳按鈕加上 disabled 樣式 V
+- 首頁 V 
+- 產品頁 V 
+- 產品詳細頁 V 
+- 購物車 V 
+- 建立訂單成功 - 前往付款（自行練習） V
+- 付款成功（自行練習） V
 
+# 加入導覽列（Layout
+建立 FrontendLayout V
+在 layout 放置 Outlet 元件 V
 
+將導覽列的 a 標籤換成 NavLink V
 
-# 加入 Loading 狀態
-1. 全螢幕
-- 取得產品列表  V
-- 調整購物車品項，數量 / 刪除   V
-- 清空購物車    V
-- 結帳   V
+# 拆分元件並撰寫路由表 
+- 產品頁 V
+- 產品詳細頁 V
+- 購物車 V
 
-2. 部分 - 加入購物車
-- 單一產品頁 / 產品 Modal   V
-- 產品列表   V
+## 產品頁
+- 產品頁的查看更多，點擊後會跳轉到產品詳細頁，不需要原本的 handleSeeMore V
 
+## 產品詳細頁
+建立 ProudctDetailPage.jsx V 
+取得單一產品 API V
+透過 useParams 拿到路由的 id V
 
-React hook form 元件化 V
+## 購物車
+建立 CartPage.jsx  V
+
+404 頁面 V

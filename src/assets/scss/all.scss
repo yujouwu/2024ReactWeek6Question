@@ -32,6 +32,10 @@ a{
   text-decoration: none;
 }
 
+p {
+  margin-bottom: 0;
+}
+
 // Hide Arrows From Input Number
 /* Chrome, Safari, Edge, Opera */
 input::-webkit-outer-spin-button,
@@ -53,10 +57,10 @@ input:focus, textarea:focus, select:focus {
 }
 
 .main-image {
-  height: 300px;
+  // height: 300px;
 }
 .more-images {
-  height: 150px;
+  height: 100px;
   border: 1px solid $gray-400;
   border-radius: 3px;
   padding: 6px;
