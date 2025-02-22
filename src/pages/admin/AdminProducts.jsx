@@ -1,5 +1,5 @@
 // 外部 node_modules 資源
-import { useEffect, useState, useRef, useContext } from "react";
+import { useEffect, useState, useRef, useContext, useCallback } from "react";
 import axios from "axios";
 import { Modal } from "bootstrap";
 
@@ -127,7 +127,6 @@ function AdminProducts(){
       }));
     }else{
       const newImages = [...modalData.imagesUrl];
-      // newImages.pop();
       newImages.splice(index, 1)
       setModalData((prevData) => ({
         ...prevData,
@@ -163,27 +162,29 @@ function AdminProducts(){
       e.target.value ='';
     }
   }
-  
+
   // 產品 API 相關
   const [products, setProducts] = useState([]);
-  const getProducts = async (page = 1) => {
-    setIsLoadingScreen(true);
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/${API_PATH}/admin/products?page=${page}`
-      );
-      setProducts(response.data.products);
-      setPagination(response.data.pagination);
-    } catch (error) {
-      console.dir(error);
-      alert(`取得產品失敗: ${error.response.data.message}`);
-      if (error.response.status === 401){
-        navigate('/admin-login')
+  const getProducts = useCallback(
+    async (page = 1) => {
+      setIsLoadingScreen(true);
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/${API_PATH}/admin/products?page=${page}`
+        );
+        setProducts(response.data.products);
+        setPagination(response.data.pagination);
+      } catch (error) {
+        console.dir(error);
+        alert(`取得產品失敗: ${error.response.data.message}`);
+        if (error.response.status === 401){
+          navigate('/admin-login')
+        }
+      } finally {
+        setIsLoadingScreen(false)
       }
-    } finally {
-      setIsLoadingScreen(false)
-    }
-  };
+    }, [navigate, setIsLoadingScreen])
+  
 
   const createProduct = async () => {
     try {
@@ -195,12 +196,9 @@ function AdminProducts(){
           is_enabled: modalData.is_enabled ? 1 : 0,
         }
       });
-      // alert(response.data.message);
       return response.data;
     } catch (error) {
       console.dir(error);
-      // const errorMessage = error.response.data.message.join(", ");    
-      // alert(`更新失敗: ${error.response.data.message}`);
       return error?.response?.data;
     }
   };
@@ -266,7 +264,7 @@ function AdminProducts(){
     // 建立 Modal 實體
     productModalRef.current = new Modal("#productModal");
     getProducts();
-  }, []);
+  }, [getProducts]);
 
   // Pagination
   const [pagination, setPagination] = useState({});

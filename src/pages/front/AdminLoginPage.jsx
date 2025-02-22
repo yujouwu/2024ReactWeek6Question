@@ -3,11 +3,10 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import Input from "../../components/form/Input";
-import { use, useEffect, useContext } from "react";
-import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
+import { useContext } from "react";
 
 // 內部 src 資源
-
+import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -73,9 +72,6 @@ function AdminLoginPage(){
     handleAdminLogin(data)
   })
 
-  // useEffect(() => {
-  //   checkAminLogin()
-  // }, [])
   return (
     <>
     <div className="d-flex flex-column justify-content-center my-5">
@@ -118,8 +114,5 @@ function AdminLoginPage(){
     </div>
     </>
   )
-}
-AdminLoginPage.propTypes = {
-  
 }
 export default AdminLoginPage

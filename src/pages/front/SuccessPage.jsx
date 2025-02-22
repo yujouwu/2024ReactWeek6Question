@@ -1,11 +1,10 @@
 // 外部資源
 import { useParams, Link } from "react-router-dom";
 import axios from "axios";
-import { useContext, useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 
 // 內部資源
 import { CartContext } from "../../contexts/cartContext";
-import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -18,23 +17,23 @@ function SuccessPage(){
 
   const { getCart } = useContext(CartContext);
 
-  const getOrder = async(orderId) => {
-    try {
-      const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
-      const response = await axios.get(url);
-      console.log('getOrder', response.data.order);
-      setOrderData(response.data.order);
-      setOrderDataProducts(Object.values(response.data.order.products));
-      getCart();
-    } catch (error) {
-      console.dir(error)
-    }
-  }
+  const getOrder = useCallback(
+    async(orderId) => {
+      try {
+        const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
+        const response = await axios.get(url);
+        setOrderData(response.data.order);
+        setOrderDataProducts(Object.values(response.data.order.products));
+        getCart();
+      } catch (error) {
+        console.dir(error)
+      }
+    }, [getCart]) 
 
   useEffect(() => {
     getOrder(orderId);
     
-  }, [orderId])
+  }, [orderId, getOrder])
   
   return (
     <>

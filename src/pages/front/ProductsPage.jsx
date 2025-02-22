@@ -1,12 +1,11 @@
 // 外部 node_modules 資源
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import axios from "axios";
+import { Link } from "react-router-dom";
 
 // 內部 src 資源
 import Pagination from "../../components/Pagination";
 import { CartContext } from "../../contexts/cartContext";
-import { Link } from "react-router-dom";
-import LoadingScreen from "../../components/LoadingScreen";
 import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
 
 // 環境變數
@@ -16,33 +15,33 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 function ProductsPage() {
   const { isLoading } = useContext(CartContext);
   const [products, setProducts] = useState([]);
-  // const [isScreenLoading, setIsLoadingScreen] = useState(false);
   const { setIsLoadingScreen } = useContext(LoadingScreenContext);
   // Pagination
   const [pagination, setPagination] = useState({});
 
   // 取得產品列表
-  const getProducts = async (page = 1) => {
-    setIsLoadingScreen(true);
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/${API_PATH}/products?page=${page}`
-      );
-      setProducts(response.data.products);
-      setPagination(response.data.pagination)
-    } catch (error) {
-      console.dir(error);
-    } finally{
-      setIsLoadingScreen(false);
-    }
-  };
+  const getProducts = useCallback(
+    async (page = 1) => {
+      setIsLoadingScreen(true);
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/${API_PATH}/products?page=${page}`
+        );
+        setProducts(response.data.products);
+        setPagination(response.data.pagination)
+      } catch (error) {
+        console.dir(error);
+      } finally{
+        setIsLoadingScreen(false);
+      }
+    }, [setIsLoadingScreen]) 
 
   // 加入購物車
   const {addCart} = useContext(CartContext);
   
   useEffect(() => {
     getProducts();
-  }, []);
+  }, [getProducts]);
 
   return (
     <>

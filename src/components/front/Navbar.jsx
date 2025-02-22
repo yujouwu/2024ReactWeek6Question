@@ -1,5 +1,5 @@
 import { NavLink } from 'react-router-dom';
-import { useContext, useEffect } from 'react';
+import { useContext } from 'react';
 
 import logo from '../../assets/img/Strawberry cake icons created by Mihimihi - Flaticon.png';
 import { CartContext } from '../../contexts/cartContext';

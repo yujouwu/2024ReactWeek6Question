@@ -1,9 +1,7 @@
 // 外部 node_modules 資源
-import { useEffect, useState, useContext } from "react";
+import { useEffect, useState, useContext, useCallback } from "react";
 import axios from "axios";
 import { useParams } from "react-router-dom";
-import ReactLoading from 'react-loading';
-
 
 // 內部 src 資源
 import { CartContext } from "../../contexts/cartContext";
@@ -15,10 +13,11 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 
 
 function ProductDetailPage(){
-  const { addCart } = useContext(CartContext);
-  const { isLoadingScreen, setIsLoadingScreen } = useContext(LoadingScreenContext);
+  const { addCart, isLoading } = useContext(CartContext);
+  const { setIsLoadingScreen } = useContext(LoadingScreenContext);
 
   const [product, setProduct] = useState({});
+  const [isLoadingProduct, setIsLoadingProduct] = useState(false);
   const [selectedQuantity, setSelectedQuantity] = useState(1);
   const [mainImage, setMainImage] = useState(null);
 
@@ -26,21 +25,23 @@ function ProductDetailPage(){
   // console.log(productId);
   
   // 取得單一產品資訊
-  const getProduct = async (productId) => {
-    setIsLoadingScreen(true);
-    
-    try {
-      const response = await axios.get(
-        `${BASE_URL}/api/${API_PATH}/product/${productId}`
-      );
-      setProduct(response.data.product);
-      console.log('getProduct');      
-    } catch (error) {
-      console.dir(error);
-    } finally{
-      setIsLoadingScreen(false);
-    }
-  };
+  const getProduct = useCallback(
+    async (productId) => {
+      setIsLoadingProduct(true)
+      setIsLoadingScreen(true)
+      try {
+        const response = await axios.get(
+          `${BASE_URL}/api/${API_PATH}/product/${productId}`
+        );
+        setProduct(response.data.product);
+        console.log('getProduct');      
+      } catch (error) {
+        console.dir(error);
+      } finally{
+        setIsLoadingProduct(false);
+        setIsLoadingScreen(false);
+      }
+    }, [setIsLoadingScreen]) 
 
   useEffect(() => {
     if (product) {
@@ -50,12 +51,12 @@ function ProductDetailPage(){
 
   useEffect(() => {
     getProduct(productId);
-  }, [productId])
+  }, [productId, getProduct])
 
   return (
     <>
       {
-        !isLoadingScreen && (
+        !isLoadingProduct && (
           <div className="container">
             <div className="row">
               <div className="col-lg-6">
@@ -145,7 +146,7 @@ function ProductDetailPage(){
                       type="button"
                       className="btn btn-primary w-100 rounded-pill"
                       onClick={() => addCart(product.id, selectedQuantity)}
-                      // disabled={isLoading}
+                      disabled={isLoading}
                     >
                       Add to Bag
                     </button>

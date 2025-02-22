@@ -1,5 +1,5 @@
+import PropTypes from "prop-types";
 import { createContext, useState } from "react";
-
 
 export const LoadingScreenContext = createContext();
 
@@ -13,4 +13,7 @@ export const LoadingScreenProvider = ({children}) => {
       </LoadingScreenContext.Provider>
     </>
   )
+}
+LoadingScreenProvider.propTypes = {
+  children: PropTypes.object,
 }

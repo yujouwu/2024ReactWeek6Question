@@ -13,7 +13,6 @@ import AdminLayout from "../layout/AdminLayout";
 import AdminProducts from "../pages/admin/AdminProducts";
 import AdminOrders from "../pages/admin/AdminOrders";
 import AdminCoupons from "../pages/admin/AdminCoupons";
-import ProtectedAdminRoute from "./ProtectedAdminRoute";
 import NotFoundPage from "../pages/front/NotFoundPage";
 
 const routes = createHashRouter([
@@ -58,11 +57,6 @@ const routes = createHashRouter([
   {
     path: '/admin',
     element: <AdminLayout />,
-    // element: (
-    //   <ProtectedAdminRoute>
-    //     <AdminLayout />
-    //   </ProtectedAdminRoute>
-    // ),
     children: [
       {
         path: 'products',

@@ -4,16 +4,16 @@ import { Link } from "react-router-dom";
 
 // 內部 src 資源
 import { CartContext } from "../../contexts/cartContext";
+import EmptyBasket from "../../components/front/emptyBasket";
 
 // 環境變數
-
 
 function CartPage(){
   const {cart, basketQty, getCart, updateCart, deleteCartAll, deleteCartOne} = useContext(CartContext);
   
   useEffect(() => {
     getCart();
-  }, [])
+  }, [getCart])
 
   return (
     <>
@@ -141,9 +141,7 @@ function CartPage(){
               </div>
             </div>
           ) : (
-            <div className="text-center">
-              <p className="h4 mb-0">Your basket is empty.</p>
-            </div>
+            cart?.carts?.length == 0 ? <EmptyBasket /> : ''
           )
         }
       </div>

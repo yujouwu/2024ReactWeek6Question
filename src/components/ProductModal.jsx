@@ -149,7 +149,7 @@ function ProductModal({
                         ] !== "")) && (
                         <button
                           type="button"
-                          className="btn btn-outline-primary w-100"
+                          className="btn btn-primary w-100"
                           onClick={onModalImageAdd}
                         >
                           Add more image

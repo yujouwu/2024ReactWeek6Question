@@ -22,11 +22,9 @@ function Message(){
               </div>
             )
           }
-          
         </div>
       </div>
     </>
   )
 }
-
 export default Message

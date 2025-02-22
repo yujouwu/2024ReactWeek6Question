@@ -1,17 +1,18 @@
+// 外部資源
 import { NavLink, Outlet, useNavigate } from "react-router-dom";
 import axios from "axios";
+import { useContext, useEffect } from "react";
 
+// 內部資源
 import logo from "../assets/img/Strawberry cake icons created by Mihimihi - Flaticon.png";
 import LoadingScreen from "../components/LoadingScreen";
-import { useContext, useEffect, useState } from "react";
 import { LoadingScreenContext } from "../contexts/loadingScreenContext";
 
 // 環境變數
-const BASE_URL = import.meta.env.VITE_BASE_URL;
+
 
 function AdminLayout() {
-  const { isLoadingScreen, setIsLoadingScreen } = useContext(LoadingScreenContext);
-  const [isAuth, setIsAuth] = useState(false);
+  const { isLoadingScreen } = useContext(LoadingScreenContext);
 
   const routes = [
     {
@@ -46,44 +47,11 @@ function AdminLayout() {
       ?.split("=")[1];
     axios.defaults.headers.common["Authorization"] = token;
 
-  // const checkAdminLogin = async () => {
-  //   setIsLoadingScreen(true)
-  //   try {
-  //     const response = await axios.post(`${BASE_URL}/api/user/check`);
-  //     console.log(response);
-  //     setIsAuth(true)
-  //   } catch (error) {
-  //     console.dir(error);
-  //     setIsAuth(false)
-  //     alert(error.response.data.message);
-  //     navigate('/admin-login')
-  //   } finally {
-  //     setIsLoadingScreen(false)
-  //   }
-  // };
-
   useEffect(() => {
     console.log('AdminLayout useEffect');
-    
     if (!token) {
       return navigate('/admin-login')
     };
-    // // 驗證登入
-    // (async () => {
-    //   setIsLoadingScreen(true)
-    //   try {
-    //     const response = await axios.post(`${BASE_URL}/api/user/check`);
-    //     console.log('AdminLayout 驗證', response);
-    //     setIsAuth(true)
-    //   } catch (error) {
-    //     console.dir(error);
-    //     setIsAuth(false)
-    //     alert(error.response.data.message);
-    //     navigate('/admin-login')
-    //   } finally {
-    //     setIsLoadingScreen(false)
-    //   }
-    // })();
   }, [navigate, token])
 
   return (
@@ -92,6 +60,7 @@ function AdminLayout() {
         {
           token && (
             <>
+              {/* Navbar  */}
               <nav
                 className="navbar navbar-expand-lg bg-body-tertiary"
                 data-bs-theme="dark"
@@ -138,6 +107,7 @@ function AdminLayout() {
                   </div>
                 </div>
               </nav>
+              {/* List-group */}
               <div className="d-flex" style={{minHeight: 'calc(100vh - 55px)'}}>
                 <div className="bg-light" style={{ width: "200px" }}>
                   <div className="list-group list-group-flush">

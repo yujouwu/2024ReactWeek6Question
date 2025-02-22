@@ -1,11 +1,10 @@
 // 外部 node_modules 資源
-import { createContext, useCallback, useContext, useEffect, useReducer, useState } from "react";
+import { createContext, useCallback, useContext, useEffect, useReducer } from "react";
 import axios from "axios";
-import { MessageContext, handleSuccessMessage, handleErrorMessage } from "./messageContext";
-import { LoadingScreenContext } from "./loadingScreenContext";
-
+import PropTypes from "prop-types";
 
 // 內部 src 資源
+import { LoadingScreenContext } from "./loadingScreenContext";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -32,14 +31,11 @@ const cartReducer = (state, action) => {
   }
 }
 export const CartProvider = ({children}) => {
-  const [isLoading, setIsLoading] = useState(false);
   const { isLoadingScreen, setIsLoadingScreen } = useContext(LoadingScreenContext);
-  // useContext
   const [cartState, cartDispatch] = useReducer(cartReducer, initState);
-  const [, dispatch] = useContext(MessageContext);
 
-  const getCart = async() => {
-    setIsLoadingScreen(true);
+  const getCart = useCallback(async() => {
+    setIsLoadingScreen(true)
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const response = await axios.get(url);
@@ -54,10 +50,10 @@ export const CartProvider = ({children}) => {
     } finally{
       setIsLoadingScreen(false)
     }
-  } 
+  }, [setIsLoadingScreen]) 
 
   const addCart = async(productId, qty) => {
-    setIsLoading(true)
+    setIsLoadingScreen(true)
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const data = {
@@ -66,17 +62,15 @@ export const CartProvider = ({children}) => {
           "qty": qty
         }
       }
-      const response = await axios.post(url, data);
-      console.log(response);
+      await axios.post(url, data);
+      // console.log(response);
       // alert(response.data.message);
       getCart();
-      handleSuccessMessage(dispatch, response.data.message)
     } catch (error) {
       console.dir(error);
       // alert(`加入購物車失敗：${error.response.data.message}`);
-      handleErrorMessage(dispatch, error.response.data.message)
     } finally {
-      setIsLoading(false)
+      setIsLoadingScreen(false)
     }
   }
 
@@ -97,7 +91,7 @@ export const CartProvider = ({children}) => {
       getCart();
     } catch (error) {
       console.dir(error);
-      alert(`更新購物車失敗：${error.response.data.message}`);
+      // alert(`更新購物車失敗：${error.response.data.message}`);
     } finally{
       setIsLoadingScreen(false);
     }
@@ -108,13 +102,13 @@ export const CartProvider = ({children}) => {
     setIsLoadingScreen(true);
     try {
       const url = `${BASE_URL}/api/${API_PATH}/carts`;
-      const response = await axios.delete(url);
-      console.log(response);
-      alert(response.data.message);
+      await axios.delete(url);
+      // console.log(response);
+      // alert(response.data.message);
       getCart();
     } catch (error) {
       console.dire(error);
-      alert(`清空購物車失敗：${error.response.data.message}`)
+      // alert(`清空購物車失敗：${error.response.data.message}`)
     } finally{
       setIsLoadingScreen(false);
     }
@@ -125,13 +119,13 @@ export const CartProvider = ({children}) => {
     setIsLoadingScreen(true);
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart/${cartId}`;
-      const response = await axios.delete(url);
-      console.log(response);
-      alert(response.data.message);
+      await axios.delete(url);
+      // console.log(response);
+      // alert(response.data.message);
       getCart();
     } catch (error) {
       console.dire(error);
-      alert(`移除產品車失敗：${error.response.data.message}`)
+      // alert(`移除產品車失敗：${error.response.data.message}`)
     } finally{
       setIsLoadingScreen(false);
     }
@@ -139,11 +133,14 @@ export const CartProvider = ({children}) => {
 
   useEffect(() => {
     getCart();
-  }, [])
+  }, [getCart])
 
   return (
-    <CartContext.Provider value={{cart: cartState.cart, basketQty: cartState.basketQty, getCart, addCart, updateCart, deleteCartAll, deleteCartOne, isLoading, isLoadingScreen}}>
+    <CartContext.Provider value={{cart: cartState.cart, basketQty: cartState.basketQty, getCart, addCart, updateCart, deleteCartAll, deleteCartOne, isLoadingScreen}}>
       {children}
     </CartContext.Provider>
   )
 } 
+CartProvider.propTypes = {
+  children: PropTypes.array,
+}
