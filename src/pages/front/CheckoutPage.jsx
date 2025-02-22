@@ -9,16 +9,17 @@ import { useNavigate } from "react-router-dom";
 import Input from "../../components/form/Input";
 import Textarea from "../../components/form/Textarea";
 import CheckboxRadio from "../../components/form/CheckboxRadio";
-import { CartContext } from "../../store/cartStore";
+import { CartContext } from "../../contexts/cartContext";
 import LoadingScreen from "../../components/LoadingScreen";
+import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 const API_PATH = import.meta.env.VITE_API_PATH;
 
 function CheckoutPage(){
-  const {cart, basketQty} = useContext(CartContext);
-  const [isScreenLoading, setIsScreenLoading] = useState(false);
+  const {cart, basketQty, getCart} = useContext(CartContext);
+  const { setIsLoadingScreen } = useContext(LoadingScreenContext);
   const navigate = useNavigate();
 
   // React hook form
@@ -48,7 +49,7 @@ function CheckoutPage(){
   
   // 客戶購物 - 結帳
   const checkout = async(data) => {
-    setIsScreenLoading(true);
+    setIsLoadingScreen(true);
     try {
       const url = `${BASE_URL}/api/${API_PATH}/order`;
       const response = await axios.post(url, data);
@@ -56,18 +57,20 @@ function CheckoutPage(){
       
       alert(response.data.message);
       navigate(`/success/${response.data.orderId}`)
-
     } catch (error) {
       console.dir(error);
       alert(error.response.data.message)
     } finally{
-      setIsScreenLoading(false);
+      setIsLoadingScreen(false);
     }
   }
 
+  useEffect(() => {
+    getCart();
+  }, [])
+
   return (
     <>
-      <LoadingScreen isScreenLoading={isScreenLoading}/>
       {/* order form */}
       <div className="container">
         <p className="h4">Checkout</p>
@@ -183,8 +186,7 @@ function CheckoutPage(){
               
             </div>
           </div>
-        </div>
-        
+        </div> 
       </div>
     </>
   )

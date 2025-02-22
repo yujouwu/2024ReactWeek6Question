@@ -57,12 +57,12 @@ const routes = createHashRouter([
   },
   {
     path: '/admin',
-    // element: <AdminLayout />,
-    element: (
-      <ProtectedAdminRoute>
-        <AdminLayout />
-      </ProtectedAdminRoute>
-    ),
+    element: <AdminLayout />,
+    // element: (
+    //   <ProtectedAdminRoute>
+    //     <AdminLayout />
+    //   </ProtectedAdminRoute>
+    // ),
     children: [
       {
         path: 'products',

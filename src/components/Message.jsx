@@ -1,5 +1,5 @@
 import { useContext, useState } from "react";
-import { MessageContext } from "../store/messageStore";
+import { MessageContext } from "../contexts/messageContext";
 
 function Message(){
   // const [message, setMessage] = useState({});
@@ -7,7 +7,7 @@ function Message(){
 
   return (
     <>
-      <div aria-live="polite" aria-atomic="true" className="position-relative">
+      <div aria-live="polite" aria-atomic="true" className="container position-relative">
         <div className="toast-container end-0 p-3" style={{top: '60px'}}>
           {
             message.title && (

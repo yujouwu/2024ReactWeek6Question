@@ -4,7 +4,8 @@ import axios from "axios";
 import { useContext, useEffect, useState } from "react";
 
 // 內部資源
-import { CartContext } from "../../store/cartStore";
+import { CartContext } from "../../contexts/cartContext";
+import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -32,6 +33,7 @@ function SuccessPage(){
 
   useEffect(() => {
     getOrder(orderId);
+    
   }, [orderId])
   
   return (

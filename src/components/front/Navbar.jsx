@@ -1,8 +1,8 @@
 import { NavLink } from 'react-router-dom';
-import { useContext } from 'react';
+import { useContext, useEffect } from 'react';
 
 import logo from '../../assets/img/Strawberry cake icons created by Mihimihi - Flaticon.png';
-import { CartContext } from '../../store/cartStore';
+import { CartContext } from '../../contexts/cartContext';
 
 function Navbar(){
   const { basketQty } = useContext(CartContext);
@@ -20,6 +20,7 @@ function Navbar(){
       name: 'Admin'
     },
   ]
+
   return (
     <>
       <nav className="navbar navbar-expand-lg bg-body-tertiary">

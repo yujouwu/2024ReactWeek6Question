@@ -3,19 +3,20 @@ import { useContext, useEffect} from "react";
 import { Link } from "react-router-dom";
 
 // 內部 src 資源
-import { CartContext } from "../../store/cartStore";
-import LoadingScreen from "../../components/LoadingScreen";
+import { CartContext } from "../../contexts/cartContext";
 
 // 環境變數
 
 
 function CartPage(){
-  const {cart, basketQty, updateCart, deleteCartAll, deleteCartOne, isScreenLoading } = useContext(CartContext);
+  const {cart, basketQty, getCart, updateCart, deleteCartAll, deleteCartOne} = useContext(CartContext);
   
+  useEffect(() => {
+    getCart();
+  }, [])
 
   return (
     <>
-      <LoadingScreen isScreenLoading={isScreenLoading}/>
       {/* cart */}
       <div className="container">
         {

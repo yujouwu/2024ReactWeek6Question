@@ -1,7 +1,8 @@
 // 外部 node_modules 資源
 import { createContext, useCallback, useContext, useEffect, useReducer, useState } from "react";
 import axios from "axios";
-import { MessageContext, handleSuccessMessage, handleErrorMessage } from "./messageStore";
+import { MessageContext, handleSuccessMessage, handleErrorMessage } from "./messageContext";
+import { LoadingScreenContext } from "./loadingScreenContext";
 
 
 // 內部 src 資源
@@ -26,21 +27,19 @@ const cartReducer = (state, action) => {
         cart: action.payload,
         basketQty: action.payload.carts.reduce((sum, item) => sum + item.qty, 0)
       };
-    case 'RESET_CART':
-      return initState;
     default:
       return state;
   }
 }
 export const CartProvider = ({children}) => {
   const [isLoading, setIsLoading] = useState(false);
-  const [isScreenLoading, setIsScreenLoading] = useState(false);
+  const { isLoadingScreen, setIsLoadingScreen } = useContext(LoadingScreenContext);
   // useContext
   const [cartState, cartDispatch] = useReducer(cartReducer, initState);
   const [, dispatch] = useContext(MessageContext);
 
   const getCart = async() => {
-    setIsScreenLoading(true);
+    setIsLoadingScreen(true);
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
       const response = await axios.get(url);
@@ -53,7 +52,7 @@ export const CartProvider = ({children}) => {
     } catch (error) {
       console.dir(error);
     } finally{
-      setIsScreenLoading(false)
+      setIsLoadingScreen(false)
     }
   } 
 
@@ -83,7 +82,7 @@ export const CartProvider = ({children}) => {
 
   // 更新商品數量
   const updateCart = async(cartId, productId, qty) => {
-    setIsScreenLoading(true);
+    setIsLoadingScreen(true);
     try {
       qty = Number(qty);
       if (isNaN(qty) || qty < 1) qty = 1;
@@ -100,13 +99,13 @@ export const CartProvider = ({children}) => {
       console.dir(error);
       alert(`更新購物車失敗：${error.response.data.message}`);
     } finally{
-      setIsScreenLoading(false);
+      setIsLoadingScreen(false);
     }
   }
 
   // 刪除購物車 (全部)
   const deleteCartAll = async() => {
-    setIsScreenLoading(true);
+    setIsLoadingScreen(true);
     try {
       const url = `${BASE_URL}/api/${API_PATH}/carts`;
       const response = await axios.delete(url);
@@ -117,13 +116,13 @@ export const CartProvider = ({children}) => {
       console.dire(error);
       alert(`清空購物車失敗：${error.response.data.message}`)
     } finally{
-      setIsScreenLoading(false);
+      setIsLoadingScreen(false);
     }
   }
 
   // 刪除購物車 (單一)
   const deleteCartOne = async(cartId) => {
-    setIsScreenLoading(true);
+    setIsLoadingScreen(true);
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart/${cartId}`;
       const response = await axios.delete(url);
@@ -134,7 +133,7 @@ export const CartProvider = ({children}) => {
       console.dire(error);
       alert(`移除產品車失敗：${error.response.data.message}`)
     } finally{
-      setIsScreenLoading(false);
+      setIsLoadingScreen(false);
     }
   }
 
@@ -143,7 +142,7 @@ export const CartProvider = ({children}) => {
   }, [])
 
   return (
-    <CartContext.Provider value={{cart: cartState.cart, basketQty: cartState.basketQty, getCart, addCart, updateCart, deleteCartAll, deleteCartOne, isLoading, isScreenLoading}}>
+    <CartContext.Provider value={{cart: cartState.cart, basketQty: cartState.basketQty, getCart, addCart, updateCart, deleteCartAll, deleteCartOne, isLoading, isLoadingScreen}}>
       {children}
     </CartContext.Provider>
   )

@@ -4,9 +4,10 @@ import axios from "axios";
 
 // 內部 src 資源
 import Pagination from "../../components/Pagination";
-import { CartContext } from "../../store/cartStore";
+import { CartContext } from "../../contexts/cartContext";
 import { Link } from "react-router-dom";
 import LoadingScreen from "../../components/LoadingScreen";
+import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -15,13 +16,14 @@ const API_PATH = import.meta.env.VITE_API_PATH;
 function ProductsPage() {
   const { isLoading } = useContext(CartContext);
   const [products, setProducts] = useState([]);
-  const [isScreenLoading, setIsScreenLoading] = useState(false);
+  // const [isScreenLoading, setIsLoadingScreen] = useState(false);
+  const { setIsLoadingScreen } = useContext(LoadingScreenContext);
   // Pagination
   const [pagination, setPagination] = useState({});
 
   // 取得產品列表
   const getProducts = async (page = 1) => {
-    setIsScreenLoading(true);
+    setIsLoadingScreen(true);
     try {
       const response = await axios.get(
         `${BASE_URL}/api/${API_PATH}/products?page=${page}`
@@ -31,7 +33,7 @@ function ProductsPage() {
     } catch (error) {
       console.dir(error);
     } finally{
-      setIsScreenLoading(false);
+      setIsLoadingScreen(false);
     }
   };
 
@@ -44,7 +46,6 @@ function ProductsPage() {
 
   return (
     <>
-      <LoadingScreen isScreenLoading={isScreenLoading}/>
       {/* product list */}
       <div className="container">
         <h1 className="text-center">All Products</h1>
@@ -84,23 +85,6 @@ function ProductsPage() {
           <Pagination pagination={pagination} getProducts={getProducts}/>
         </div>
       </div>
-
-      {/* loading
-      {
-        isScreenLoading && (
-          <div
-            className="d-flex justify-content-center align-items-center"
-            style={{
-              backgroundColor: 'rgba(255, 255, 255, 0.3)',
-              inset: 0,
-              position: 'fixed',
-              zIndex: 999,
-            }}
-          >
-            <ReactLoading type="spin" color="black" height="4rem" width="4rem" />
-          </div>
-        )
-      } */}
     </>
   );
 }

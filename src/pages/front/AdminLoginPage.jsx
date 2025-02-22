@@ -3,6 +3,8 @@ import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { useForm } from "react-hook-form";
 import Input from "../../components/form/Input";
+import { use, useEffect, useContext } from "react";
+import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
 
 // 內部 src 資源
 
@@ -11,6 +13,7 @@ import Input from "../../components/form/Input";
 const BASE_URL = import.meta.env.VITE_BASE_URL;
 
 function AdminLoginPage(){
+  const { setIsLoadingScreen } = useContext(LoadingScreenContext);
   const navigate = useNavigate();
   const {
     register,
@@ -27,28 +30,52 @@ function AdminLoginPage(){
 
   const handleAdminLogin = async (data) => {
     // e.preventDefault();
+    setIsLoadingScreen(true)
     try {
       const response = await axios.post(`${BASE_URL}/admin/signin`, data);
       const { expired, token } = response.data;
 
+      // 寫入 Token
       // document.cookie = `hexToken=zzzzzzzz; expires=${new Date(expired)}; SameSite=None; Secure`;
       document.cookie = `hexToken=${token}; expires=${new Date(expired)}; SameSite=None; Secure`;
-      axios.defaults.headers.common["Authorization"] = `${token}`;
-
-      console.log(response);
-      // alert(response.data.message)
-      navigate('/admin/products')
+      const isAuth = await checkAminLogin();
+      if (isAuth) {
+        navigate('/admin/products')
+      }
     } catch (error) {
       console.dir(error);
       alert(`登入失敗: ${error.response.data.error.message}`);
+    } finally {
+      setIsLoadingScreen(false)
     }
   };
+
+  const checkAminLogin = async() => {
+    // 取出 Token
+    const token = document.cookie
+      .split("; ")
+      .find((row) => row.startsWith("hexToken="))
+      ?.split("=")[1];
+    axios.defaults.headers.common["Authorization"] = token;
+    try {
+      const response = await axios.post(`${BASE_URL}/api/user/check`);
+      console.log('LoginPage 驗證', response);
+      return response.data.success;
+    } catch (error) {
+      console.dir(error);
+      alert(error.response.data.message);
+      navigate('/admin-login')
+    }
+  }
 
   const onSubmit = handleSubmit((data) => {
     console.log(data);
     handleAdminLogin(data)
   })
 
+  // useEffect(() => {
+  //   checkAminLogin()
+  // }, [])
   return (
     <>
     <div className="d-flex flex-column justify-content-center my-5">

@@ -6,7 +6,9 @@ import { Modal } from "bootstrap";
 // 內部 src 資源
 import Pagination from '../../components/Pagination';
 import ProductModal from "../../components/ProductModal";
-import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../../store/messageStore";
+import { MessageContext, handleSuccessMessage, handleErrorMessage } from "../../contexts/messageContext";
+import { LoadingScreenContext } from "../../contexts/loadingScreenContext";
+import { useNavigate } from "react-router-dom";
 
 // 環境變數
 const BASE_URL = import.meta.env.VITE_BASE_URL;
@@ -56,6 +58,9 @@ const defaultModalData = {
 };
 
 function AdminProducts(){
+  const { setIsLoadingScreen } = useContext(LoadingScreenContext);
+  const navigate = useNavigate();
+
   // Modal 相關
   const productModalRef = useRef(null);
   const [modalType, setModalType] = useState("");
@@ -160,10 +165,9 @@ function AdminProducts(){
   }
   
   // 產品 API 相關
-  // const [tempProduct, setTempProduct] = useState({});
-  // const [mainImage, setMainImage] = useState(null);
   const [products, setProducts] = useState([]);
   const getProducts = async (page = 1) => {
+    setIsLoadingScreen(true);
     try {
       const response = await axios.get(
         `${BASE_URL}/api/${API_PATH}/admin/products?page=${page}`
@@ -173,6 +177,11 @@ function AdminProducts(){
     } catch (error) {
       console.dir(error);
       alert(`取得產品失敗: ${error.response.data.message}`);
+      if (error.response.status === 401){
+        navigate('/admin-login')
+      }
+    } finally {
+      setIsLoadingScreen(false)
     }
   };
 
