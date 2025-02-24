@@ -19,29 +19,52 @@ function ProductsPage() {
   // Pagination
   const [pagination, setPagination] = useState({});
 
-  // 取得產品列表
-  const getProducts = useCallback(
-    async (page = 1) => {
-      setIsLoadingScreen(true);
-      try {
-        const response = await axios.get(
-          `${BASE_URL}/api/${API_PATH}/products?page=${page}`
-        );
-        setProducts(response.data.products);
-        setPagination(response.data.pagination)
-      } catch (error) {
-        console.dir(error);
-      } finally{
-        setIsLoadingScreen(false);
-      }
-    }, [setIsLoadingScreen]) 
+  // // 取得產品列表
+  // const getProducts = useCallback(
+  //   async (page = 1) => {
+  //     setIsLoadingScreen(true);
+  //     try {
+  //       const response = await axios.get(
+  //         `${BASE_URL}/api/${API_PATH}/products?page=${page}`
+  //       );
+  //       setProducts(response.data.products);
+  //       setPagination(response.data.pagination)
+  //     } catch (error) {
+  //       console.dir(error);
+  //     } finally{
+  //       setIsLoadingScreen(false);
+  //     }
+  //   }, [setIsLoadingScreen]) 
+
+  // // 加入購物車
+  // const {addCart} = useContext(CartContext);
+  
+  // useEffect(() => {
+  //   getProducts();
+  // }, [getProducts]);
+
+   // 取得產品列表
+   const getProducts = async (page = 1) => {
+    setIsLoadingScreen(true);
+    try {
+      const response = await axios.get(
+        `${BASE_URL}/api/${API_PATH}/products?page=${page}`
+      );
+      setProducts(response.data.products);
+      setPagination(response.data.pagination)
+    } catch (error) {
+      console.dir(error);
+    } finally{
+      setIsLoadingScreen(false);
+    }
+  }
 
   // 加入購物車
   const {addCart} = useContext(CartContext);
   
   useEffect(() => {
     getProducts();
-  }, [getProducts]);
+  }, []);
 
   return (
     <>

@@ -34,7 +34,29 @@ export const CartProvider = ({children}) => {
   const { isLoadingScreen, setIsLoadingScreen } = useContext(LoadingScreenContext);
   const [cartState, cartDispatch] = useReducer(cartReducer, initState);
 
-  const getCart = useCallback(async() => {
+  // const getCart = useCallback(async() => {
+  //   setIsLoadingScreen(true)
+  //   try {
+  //     const url = `${BASE_URL}/api/${API_PATH}/cart`;
+  //     const response = await axios.get(url);
+  //     const cartData = response.data.data;   
+  //     cartDispatch({
+  //       type: 'GET_CART',
+  //       payload: cartData
+  //     });
+      
+  //   } catch (error) {
+  //     console.dir(error);
+  //   } finally{
+  //     setIsLoadingScreen(false)
+  //   }
+  // }, [setIsLoadingScreen]) 
+
+  // useEffect(() => {
+  //   getCart();
+  // }, [getCart])
+
+  const getCart = async() => {
     setIsLoadingScreen(true)
     try {
       const url = `${BASE_URL}/api/${API_PATH}/cart`;
@@ -50,7 +72,11 @@ export const CartProvider = ({children}) => {
     } finally{
       setIsLoadingScreen(false)
     }
-  }, [setIsLoadingScreen]) 
+  } 
+
+  useEffect(() => {
+    getCart();
+  }, [])
 
   const addCart = async(productId, qty) => {
     setIsLoadingScreen(true)
@@ -130,10 +156,6 @@ export const CartProvider = ({children}) => {
       setIsLoadingScreen(false);
     }
   }
-
-  useEffect(() => {
-    getCart();
-  }, [getCart])
 
   return (
     <CartContext.Provider value={{cart: cartState.cart, basketQty: cartState.basketQty, getCart, addCart, updateCart, deleteCartAll, deleteCartOne, isLoadingScreen}}>

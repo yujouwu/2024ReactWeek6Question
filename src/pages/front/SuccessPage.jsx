@@ -17,23 +17,40 @@ function SuccessPage(){
 
   const { getCart } = useContext(CartContext);
 
-  const getOrder = useCallback(
-    async(orderId) => {
-      try {
-        const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
-        const response = await axios.get(url);
-        setOrderData(response.data.order);
-        setOrderDataProducts(Object.values(response.data.order.products));
-        getCart();
-      } catch (error) {
-        console.dir(error)
-      }
-    }, [getCart]) 
+  // const getOrder = useCallback(
+  //   async(orderId) => {
+  //     try {
+  //       const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
+  //       const response = await axios.get(url);
+  //       setOrderData(response.data.order);
+  //       setOrderDataProducts(Object.values(response.data.order.products));
+  //       getCart();
+  //     } catch (error) {
+  //       console.dir(error)
+  //     }
+  //   }, [getCart]) 
+
+  // useEffect(() => {
+  //   getOrder(orderId);
+    
+  // }, [orderId, getOrder])
+
+  const getOrder = async(orderId) => {
+    try {
+      const url = `${BASE_URL}/api/${API_PATH}/order/${orderId}`;
+      const response = await axios.get(url);
+      setOrderData(response.data.order);
+      setOrderDataProducts(Object.values(response.data.order.products));
+      getCart();
+    } catch (error) {
+      console.dir(error)
+    }
+  }
 
   useEffect(() => {
     getOrder(orderId);
     
-  }, [orderId, getOrder])
+  }, [orderId])
   
   return (
     <>
